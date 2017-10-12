@@ -85,7 +85,7 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
 
-
+	PROGBAR_Handle hProgbar;
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -126,6 +126,9 @@ int main(void)
 
 
 	GUI_Exec();
+
+	hProgbar = PROGBAR_CreateEx(50, 235, 385, 50, 0, WM_CF_SHOW, 0, GUI_ID_PROGBAR0);
+
 
   /* USER CODE END 2 */
 
