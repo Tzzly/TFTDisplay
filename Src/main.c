@@ -86,6 +86,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
 	PROGBAR_Handle hProgbar;
+	char ADCstring[10];
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -125,9 +126,11 @@ int main(void)
 	GUI_DispString("Analog to digital");
 
 
+	PROGBAR_SetDefaultSkin(PROGBAR_SKIN_FLEX);
+	hProgbar = PROGBAR_CreateEx(50, 180, 219, 30, 0, WM_CF_SHOW, 0, GUI_ID_PROGBAR0);
+	PROGBAR_SetFont(hProgbar, &GUI_Font8x16);
+	PROGBAR_SetMinMax(hProgbar, 0, 5);
 	GUI_Exec();
-
-	hProgbar = PROGBAR_CreateEx(50, 235, 385, 50, 0, WM_CF_SHOW, 0, GUI_ID_PROGBAR0);
 
 
   /* USER CODE END 2 */
@@ -146,14 +149,20 @@ int main(void)
 
 	  ADC_value = HAL_ADC_GetValue(&hadc3);
 
-
+	  ADC_value = ADC_value/1000;
 	  GUI_GotoXY(100, 100);
-	  GUI_DispFloatFix((ADC_value/1000), 4, 2);
+	  GUI_DispFloatFix(ADC_value, 4, 2);
 	  GUI_DispString("Volt");
 
 
 	  HAL_ADC_Stop_IT(&hadc3);
-	  HAL_Delay(500);
+	  HAL_Delay(250);
+
+
+
+	  PROGBAR_SetValue(hProgbar, ADC_value);
+	  PROGBAR_SetText(hProgbar, "...");
+	  GUI_Delay(50);
 
 
   /* USER CODE BEGIN 3 */
