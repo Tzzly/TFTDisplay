@@ -116,12 +116,12 @@ int main(void)
 	GUI_Init();
 
 	GUI_SetFont(&GUI_Font8x16);
-	GUI_SetBkColor(GUI_BLACK);
+	GUI_SetBkColor(GUI_BLUE);
 	GUI_Clear();
 			//foreground or text color
 
 	GUI_SetFont(&GUI_Font32B_ASCII);
-	GUI_SetColor(GUI_WHITE);		//foreground or text color
+	GUI_SetColor(GUI_BLACK);		//foreground or text color
 	GUI_DispString("Analog to digital");
 
 
@@ -145,9 +145,9 @@ int main(void)
 
 
 	  GUI_GotoXY(100, 100);
-		GUI_SetFont(&GUI_Font32B_ASCII);
-		GUI_SetColor(GUI_WHITE);
-	  GUI_DispFloatFix(ADC_value, 7, 2);
+	  GUI_DispFloatFix((ADC_value/1000), 4, 2);
+	  GUI_DispString("Volt");
+
 
 	  HAL_ADC_Stop_IT(&hadc3);
 	  HAL_Delay(500);
