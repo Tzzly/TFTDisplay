@@ -160,7 +160,7 @@ int main(void)
 	  HAL_Delay(250);
 
 	  PROGBAR_SetValue(hProgbar, ADC_bar);
-	  PROGBAR_SetText(hProgbar, "...");
+	  PROGBAR_SetText(hProgbar, "");
 	  GUI_Delay(50);
 
 
