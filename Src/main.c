@@ -129,7 +129,7 @@ int main(void)
 	PROGBAR_SetDefaultSkin(PROGBAR_SKIN_FLEX);
 	hProgbar = PROGBAR_CreateEx(50, 180, 219, 30, 0, WM_CF_SHOW, 0, GUI_ID_PROGBAR0);
 	PROGBAR_SetFont(hProgbar, &GUI_Font8x16);
-	PROGBAR_SetMinMax(hProgbar, 0, 5);
+	PROGBAR_SetMinMax(hProgbar, 0,4000 );
 	GUI_Exec();
 
 
@@ -142,25 +142,24 @@ int main(void)
 
   /* USER CODE END WHILE */
 	  float ADC_value;
+	  float ADC_bar;
 
 	  HAL_ADC_Start_IT(&hadc3);
 
 	  HAL_ADC_PollForConversion(&hadc3, 1000);
 
 	  ADC_value = HAL_ADC_GetValue(&hadc3);
+	  ADC_bar =  HAL_ADC_GetValue(&hadc3);
 
 	  ADC_value = ADC_value/1000;
 	  GUI_GotoXY(100, 100);
 	  GUI_DispFloatFix(ADC_value, 4, 2);
 	  GUI_DispString("Volt");
 
-
 	  HAL_ADC_Stop_IT(&hadc3);
 	  HAL_Delay(250);
 
-
-
-	  PROGBAR_SetValue(hProgbar, ADC_value);
+	  PROGBAR_SetValue(hProgbar, ADC_bar);
 	  PROGBAR_SetText(hProgbar, "...");
 	  GUI_Delay(50);
 
