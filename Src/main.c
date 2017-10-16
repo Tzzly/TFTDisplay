@@ -159,6 +159,7 @@ int main(void)
 	  HAL_ADC_Stop_IT(&hadc3);
 	  HAL_Delay(250);
 
+	  sprintf(ADC_value, %d)
 	  PROGBAR_SetValue(hProgbar, ADC_bar);
 	  PROGBAR_SetText(hProgbar, "");
 	  GUI_Delay(50);
