@@ -149,7 +149,7 @@ int main(void)
 	  GUI_GotoXY(100,100);
 	  GUI_DispFloatFix(ADC_value, 4, 2);
 
-	  sprintf(ADC_string, "%f", ADC_bar);
+	  sprintf(ADC_string, "%0.0f", ADC_bar);
 	  PROGBAR_SetValue(hProgbar, ADC_bar);
 	  PROGBAR_SetText(hProgbar, ADC_string);
 	  GUI_Delay(250);
