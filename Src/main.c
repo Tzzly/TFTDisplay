@@ -143,7 +143,18 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  HAL_ADC_Start_IT(&hadc3);
 
+	  ADC_value = ADC_value/4095*2.9;
+	  GUI_GotoXY(100,100);
+	  GUI_DispFloatFix(ADC_value, 4, 2);
+
+	  sprintf(ADC_string, "%f", ADC_bar);
+	  PROGBAR_SetValue(hProgbar, ADC_bar);
+	  PROGBAR_SetText(hProgbar, ADC_string);
+	  GUI_Delay(250);
+
+	  HAL_ADC_Start_IT(&hadc3);
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */

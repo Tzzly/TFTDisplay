@@ -48,7 +48,8 @@ char Prescaler = 100;
 extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc3;
 extern UART_HandleTypeDef huart2;
-
+extern float ADC_value;
+extern float ADC_bar;
 /******************************************************************************/
 /*            Cortex-M4 Processor Interruption and Exception Handlers         */ 
 /******************************************************************************/
@@ -103,7 +104,8 @@ void SysTick_Handler(void)
 void ADC_IRQHandler(void)
 {
   /* USER CODE BEGIN ADC_IRQn 0 */
-
+ADC_value = HAL_ADC_GetValue(&hadc3);
+ADC_bar = HAL_ADC_GetValue(&hadc3);
   /* USER CODE END ADC_IRQn 0 */
   HAL_ADC_IRQHandler(&hadc1);
   HAL_ADC_IRQHandler(&hadc3);
