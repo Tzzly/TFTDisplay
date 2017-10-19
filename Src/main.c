@@ -58,7 +58,6 @@ SRAM_HandleTypeDef hsram1;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-extern GUI_PID_STATE pstate;
 
 /* USER CODE END PV */
 
