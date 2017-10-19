@@ -85,7 +85,9 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
 	PROGBAR_Handle hProgbar;
-	char ADCstring[10];
+	char ADC_string[10];
+	float ADC_value;
+	float ADC_bar;
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -140,8 +142,6 @@ int main(void)
   {
 
   /* USER CODE END WHILE */
-	  float ADC_value;
-	  float ADC_bar;
 
 	  HAL_ADC_Start_IT(&hadc3);
 
@@ -157,9 +157,9 @@ int main(void)
 	  GUI_DispFloatFix(ADC_value, 4, 2);
 	  GUI_DispString("Volt");
 
-	  sprintf(ADCstring, "%0.2f", ADC_value);
+	  sprintf(ADC_string, "%0.2f", ADC_value);
 	  PROGBAR_SetValue(hProgbar, ADC_bar);
-	  PROGBAR_SetText(hProgbar, ADCstring);
+	  PROGBAR_SetText(hProgbar, ADC_string);
 
 	  GUI_Delay(250);
 

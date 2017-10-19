@@ -9729,7 +9729,7 @@ LOAD c:/ac6/systemworkbench/plugins/fr.ac6.mcu.externaltools.arm-none.win32_1.15
                 0x00002f63       0x22 c:/ac6/systemworkbench/plugins/fr.ac6.mcu.externaltools.arm-none.win32_1.15.0.201708311556/tools/compiler/bin/../lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m/fpv4-sp/hard/crtn.o
 OUTPUT(TFT.elf elf32-littlearm)
 
-.debug_info     0x00000000    0x2020d
+.debug_info     0x00000000    0x20203
  .debug_info    0x00000000     0x1101 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
  .debug_info    0x00001101     0x1508 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.o
  .debug_info    0x00002609     0x15f6 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o
@@ -9746,11 +9746,11 @@ OUTPUT(TFT.elf elf32-littlearm)
  .debug_info    0x00011be0      0xf24 Drivers/STemWin/Config/LCD_STM32F4.o
  .debug_info    0x00012b04     0x29c3 Drivers/STemWin/Config/ts.o
  .debug_info    0x000154c7     0x1943 Drivers/STemWin/OS/GUI_X.o
- .debug_info    0x00016e0a     0x432e Src/main.o
- .debug_info    0x0001b138     0x1c15 Src/stm32f4xx_hal_msp.o
- .debug_info    0x0001cd4d     0x2716 Src/stm32f4xx_it.o
- .debug_info    0x0001f463      0xd2b Src/system_stm32f4xx.o
- .debug_info    0x0002018e       0x7f startup/startup_stm32f407xx.o
+ .debug_info    0x00016e0a     0x4324 Src/main.o
+ .debug_info    0x0001b12e     0x1c15 Src/stm32f4xx_hal_msp.o
+ .debug_info    0x0001cd43     0x2716 Src/stm32f4xx_it.o
+ .debug_info    0x0001f459      0xd2b Src/system_stm32f4xx.o
+ .debug_info    0x00020184       0x7f startup/startup_stm32f407xx.o
 
 .debug_abbrev   0x00000000     0x342e
  .debug_abbrev  0x00000000      0x310 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
@@ -9989,7 +9989,7 @@ OUTPUT(TFT.elf elf32-littlearm)
  .debug_line    0x0000c639      0x86d Src/system_stm32f4xx.o
  .debug_line    0x0000cea6       0x7f startup/startup_stm32f407xx.o
 
-.debug_str      0x00000000    0xd3e3e
+.debug_str      0x00000000    0xd3e3f
  .debug_str     0x00000000    0xc32f3 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
                               0xc36c5 (size before relaxing)
  .debug_str     0x000c32f3      0x635 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.o
@@ -10022,13 +10022,13 @@ OUTPUT(TFT.elf elf32-littlearm)
                               0xcabfc (size before relaxing)
  .debug_str     0x000cd45c       0x85 Drivers/STemWin/OS/GUI_X.o
                                0x9440 (size before relaxing)
- .debug_str     0x000cd4e1     0x6857 Src/main.o
-                              0xd15bd (size before relaxing)
- .debug_str     0x000d3d38       0x63 Src/stm32f4xx_hal_msp.o
+ .debug_str     0x000cd4e1     0x6858 Src/main.o
+                              0xd15be (size before relaxing)
+ .debug_str     0x000d3d39       0x63 Src/stm32f4xx_hal_msp.o
                               0xc3b26 (size before relaxing)
- .debug_str     0x000d3d9b       0x49 Src/stm32f4xx_it.o
+ .debug_str     0x000d3d9c       0x49 Src/stm32f4xx_it.o
                               0xcaacb (size before relaxing)
- .debug_str     0x000d3de4       0x5a Src/system_stm32f4xx.o
+ .debug_str     0x000d3de5       0x5a Src/system_stm32f4xx.o
                               0xc2c1a (size before relaxing)
 
 .comment        0x00000000      0x101
