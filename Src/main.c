@@ -58,7 +58,8 @@ SRAM_HandleTypeDef hsram1;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+float ADC_value = 0;
+float ADC_bar = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -86,8 +87,7 @@ int main(void)
 
 	PROGBAR_Handle hProgbar;
 	char ADC_string[10];
-	float ADC_value;
-	float ADC_bar;
+
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -142,26 +142,15 @@ int main(void)
   {
 
   /* USER CODE END WHILE */
+HAL_ADC_Start_IT(&hadc3);
 
-	  HAL_ADC_Start_IT(&hadc3);
+ADC_value = ADC_value/4095*2.9;
+GUI_GotoXY(100,100);
+GUI_DispFloatFix(ADC_value, 4, 2);
 
-	  HAL_ADC_PollForConversion(&hadc3, 1000);
-	  ADC_value =  HAL_ADC_GetValue(&hadc3);
-	  ADC_bar = HAL_ADC_GetValue(&hadc3);
-
-	  HAL_ADC_Stop_IT(&hadc3);
-	  HAL_Delay(250);
-
-	  ADC_value = ADC_value/4095.0 * 3.0;
-	  GUI_GotoXY(100, 100);
-	  GUI_DispFloatFix(ADC_value, 4, 2);
-	  GUI_DispString("Volt");
-
-	  sprintf(ADC_string, "%0.2f", ADC_value);
-	  PROGBAR_SetValue(hProgbar, ADC_bar);
-	  PROGBAR_SetText(hProgbar, ADC_string);
-
-	  GUI_Delay(250);
+sprintf(ADC_string, %0.2f, ADC_bar);
+PROGBAR_SetValue(hProgbar, ADC_bar);
+PROGBAR_SetText(hProgbar, ADC_string);
 
   /* USER CODE BEGIN 3 */
 
