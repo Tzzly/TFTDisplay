@@ -47,6 +47,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
+
 ADC_HandleTypeDef hadc3;
 
 CRC_HandleTypeDef hcrc;
@@ -61,6 +62,7 @@ SRAM_HandleTypeDef hsram1;
 /* Private variables ---------------------------------------------------------*/
 float ADC_value = 0;
 float ADC_bar = 0;
+float ADC_volt = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -120,7 +122,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	GUI_Init();
 
-	GUI_SetFont(&GUI_Font8x16);
 	GUI_SetBkColor(GUI_BLUE);
 	GUI_Clear();
 			//foreground or text color
@@ -143,18 +144,42 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  HAL_ADC_Start_IT(&hadc3);
+		float Vsense;
+		float Voltage;
+		float temp;
+		HAL_ADC_Start_IT(&hadc3);
 
-	  ADC_value = ADC_value/4095*2.9;
-	  GUI_GotoXY(100,100);
-	  GUI_DispFloatFix(ADC_value, 4, 2);
+		GUI_SetColor(GUI_BLACK);
+		GUI_SetFont(&GUI_Font32B_ASCII);
+		ADC_volt = ADC_value / 4095 * 2.9 ;
+		GUI_GotoXY(100, 100);
+		GUI_DispFloatFix(ADC_volt, 4, 2);
+		GUI_DispStringAt("Volts",160,100);
 
-	  sprintf(ADC_string, "%0.0f", ADC_bar);
-	  PROGBAR_SetValue(hProgbar, ADC_bar);
-	  PROGBAR_SetText(hProgbar, ADC_string);
-	  GUI_Delay(250);
+		sprintf(ADC_string, "%0.0f", ADC_bar);
+		PROGBAR_SetValue(hProgbar, ADC_bar);
+		PROGBAR_SetText(hProgbar, ADC_string);
 
-	  HAL_ADC_Start_IT(&hadc3);
+		HAL_ADC_Stop_IT(&hadc3);
+		HAL_ADC_Start(&hadc1);
+
+		HAL_ADC_PollForConversion(&hadc1, 1000);
+
+		Vsense = HAL_ADC_GetValue(&hadc1);
+		Voltage = Vsense /4095 * 2.9;
+		temp = (Voltage - 0.76) / 0.0025 + 25;
+
+		GUI_SetFont(&GUI_Font8x16);
+		GUI_SetColor(GUI_YELLOW);
+		GUI_DispStringAt("Temp:", 240, 0);
+		GUI_GotoXY(280 , 0);
+		GUI_DispFloatFix(temp, 4, 1);
+
+		HAL_ADC_Stop(&hadc1);
+
+		GUI_Delay(250);
+
+
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
