@@ -60,7 +60,7 @@ SRAM_HandleTypeDef hsram1;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-	uint16_t ADCReading;
+	uint16_t ADC_Reading;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -150,11 +150,17 @@ int main(void)
   {
 
   /* USER CODE END WHILE */
-HAL_ADC_Start_DMA(&hadc3, (uint32_t*)ADCReading, 1);
-ADC_value = ADCReading;
+HAL_ADC_Start_DMA(&hadc3, &ADC_Reading, 4096);
+ADC_value = ADC_Reading;
+ADC_bar = ADC_Reading;
 ADC_voltage = ADC_value / 4095 * 2.9;
 GUI_GotoXY(100,100);
-GUI_DispFloatFix(ADCReading, 4 ,2);
+GUI_DispFloatFix(ADC_voltage, 4 ,2);
+
+sprintf(ADC_string, "%0.0f", ADC_bar);
+PROGBAR_SetValue(hProgbar, ADC_bar);
+PROGBAR_SetText(hProgbar, ADC_string);
+GUI_Delay(250);
 HAL_ADC_Stop_DMA(&hadc3);
 HAL_Delay(250);
   /* USER CODE BEGIN 3 */

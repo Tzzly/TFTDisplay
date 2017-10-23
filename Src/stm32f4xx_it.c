@@ -47,7 +47,7 @@ char Prescaler = 100;
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_adc3;
 extern UART_HandleTypeDef huart2;
-
+extern uint16_t ADC_reading;
 /******************************************************************************/
 /*            Cortex-M4 Processor Interruption and Exception Handlers         */ 
 /******************************************************************************/
@@ -125,6 +125,8 @@ void DMA2_Stream0_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
-
+void HAL_ADC_ConCpltCallback(ADC_HandleTypeDef* hadc3){
+	ADC_reading = HAL_ADC_GetValue(&hadc3);
+}
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
