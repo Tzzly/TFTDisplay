@@ -153,6 +153,9 @@ int main(void)
   {
 
   /* USER CODE END WHILE */
+		GUI_SetFont(&GUI_Font32B_ASCII);
+		GUI_SetColor(GUI_BLACK);
+
 HAL_ADC_Start_DMA(&hadc3, &ADC_Reading, 4096);
 ADC_value = ADC_Reading;
 ADC_bar = ADC_Reading;
@@ -164,7 +167,9 @@ sprintf(ADC_string, "%0.0f", ADC_bar);
 PROGBAR_SetValue(hProgbar, ADC_bar);
 PROGBAR_SetText(hProgbar, ADC_string);
 GUI_Delay(250);
-HAL_ADC_Stop_DMA(&hadc3);HAL_ADC_Start(&hadc1);
+
+HAL_ADC_Stop_DMA(&hadc3);
+HAL_ADC_Start(&hadc1);
 
 HAL_ADC_PollForConversion(&hadc1, 1000);
 
