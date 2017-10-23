@@ -93,6 +93,9 @@ int main(void)
 	float ADC_value;
 	float ADC_voltage;
 	float ADC_bar;
+	float temp;
+	float Vsense;
+	float Voltage;
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -161,8 +164,25 @@ sprintf(ADC_string, "%0.0f", ADC_bar);
 PROGBAR_SetValue(hProgbar, ADC_bar);
 PROGBAR_SetText(hProgbar, ADC_string);
 GUI_Delay(250);
-HAL_ADC_Stop_DMA(&hadc3);
+HAL_ADC_Stop_DMA(&hadc3);HAL_ADC_Start(&hadc1);
+
+HAL_ADC_PollForConversion(&hadc1, 1000);
+
+Vsense = HAL_ADC_GetValue(&hadc1);
+Voltage = Vsense /4095 * 2.9;
+temp = (Voltage - 0.76) / 0.0025 + 25;
+
+GUI_SetFont(&GUI_Font8x16);
+GUI_SetColor(GUI_YELLOW);
+GUI_DispStringAt("Temp:", 240, 0);
+GUI_GotoXY(280 , 0);
+GUI_DispFloatFix(temp, 4, 1);
+
+HAL_ADC_Stop(&hadc1);
+
 HAL_Delay(250);
+
+
   /* USER CODE BEGIN 3 */
 
   }
