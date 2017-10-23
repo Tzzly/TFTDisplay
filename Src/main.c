@@ -3,6 +3,11 @@
   * File Name          : main.c
   * Description        : Main program body
   ******************************************************************************
+  ** This notice applies to any and all portions of this file
+  * that are not between comment pairs USER CODE BEGIN and
+  * USER CODE END. Other portions of this file, whether 
+  * inserted by the user or by software development tools
+  * are owned by their respective copyright owners.
   *
   * COPYRIGHT(c) 2017 STMicroelectronics
   *
@@ -43,6 +48,8 @@
 /* Private variables ---------------------------------------------------------*/
 CRC_HandleTypeDef hcrc;
 
+RTC_HandleTypeDef hrtc;
+
 SPI_HandleTypeDef hspi2;
 
 UART_HandleTypeDef huart2;
@@ -51,18 +58,17 @@ SRAM_HandleTypeDef hsram1;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-extern GUI_PID_STATE pstate;
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-void Error_Handler(void);
 static void MX_GPIO_Init(void);
 static void MX_FSMC_Init(void);
 static void MX_CRC_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_USART2_UART_Init(void);
+static void MX_RTC_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -77,11 +83,6 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-	int count = 0;
-	char countString[10];
-
-	PROGBAR_Handle hProgbar;
-	BUTTON_Handle hButton;
 
   /* USER CODE END 1 */
 
@@ -90,8 +91,16 @@ int main(void)
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
+  /* USER CODE BEGIN Init */
+
+  /* USER CODE END Init */
+
   /* Configure the system clock */
   SystemClock_Config();
+
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
@@ -99,149 +108,10 @@ int main(void)
   MX_CRC_Init();
   MX_SPI2_Init();
   MX_USART2_UART_Init();
-
-  HAL_GPIO_WritePin(LCD_BL_GPIO_Port, LCD_BL_Pin, GPIO_PIN_RESET);
+  MX_RTC_Init();
 
   /* USER CODE BEGIN 2 */
 	GUI_Init();
-
-	GUI_SetFont(&GUI_Font8x16);
-	GUI_SetBkColor(GUI_BLUE);
-	GUI_Clear();
-
-	GUI_SetColor(GUI_CYAN);			//foreground or text color
-	GUI_DispString("ECET260 Test Program\tStemwin ver: ");
-
-	GUI_DispString(GUI_GetVersionString());
-	GUI_DispString("\n\n\n");
-
-	GUI_SetFont(&GUI_Font32B_ASCII);
-	GUI_SetColor(GUI_WHITE);		//foreground or text color
-
-
-#ifdef ILI9481
-	GUI_DispStringHCenterAt("ECET260", 240, 50);
-
-	GUI_DrawGradientH(15, 220, 465, 300, 0x0000FF, 0x00FFFF);
-
-	PROGBAR_SetDefaultSkin(PROGBAR_SKIN_FLEX); // Sets the default skin for new widgets
-
-/* Create progress bar at location x = 10, y = 10, length = 219, height = 30 */
-	hProgbar = PROGBAR_CreateEx(50, 235, 385, 50, 0, WM_CF_SHOW, 0, GUI_ID_PROGBAR0);
-
-	// Create the button
-	hButton = BUTTON_CreateEx(200, 120, 80, 60, 0, WM_CF_SHOW, 0, GUI_ID_BUTTON0);
-
-	//display ID code for TFT
-	uint16_t regTemp[6];
-
-	GUI_SetFont(&GUI_Font16B_ASCII);
-	GUI_SetColor(GUI_YELLOW);
-
-	LcdWriteReg(0xbf);
-	HAL_SRAM_Read_16b(&hsram1, LCD_CMD, &regTemp, 6);
-	GUI_DispHexAt(regTemp[3], 10, 20, 2);
-	GUI_DispHex(regTemp[4], 2);
-
-
-
-#elif ILI9341
-	GUI_DispStringHCenterAt("ECET260", 160, 50);
-
-	GUI_DrawGradientH(5, 150, 315, 235, 0x0000FF, 0x00FFFF);
-
-	/* Create progress bar at location x = 10, y = 10, length = 219, height = 30 */
-	hProgbar = PROGBAR_CreateEx(50, 180, 219, 30, 0, WM_CF_SHOW, 0, GUI_ID_PROGBAR0);
-
-
-	// Create the button
-	hButton = BUTTON_CreateEx(120, 100, 80, 60, 0, WM_CF_SHOW, 0, GUI_ID_BUTTON0);
-
-
-	//display ID code for TFT
-	uint16_t regTemp[6];
-
-	GUI_SetFont(&GUI_Font16B_ASCII);
-	GUI_SetColor(GUI_YELLOW);
-
-	LcdWriteReg(0xd3);
-	HAL_SRAM_Read_16b(&hsram1, LCD_CMD, &regTemp, 4);
-	GUI_DispHexAt(regTemp[2], 10, 20, 2);
-	GUI_DispHex(regTemp[2], 2);
-
-	GUI_Exec();
-
-#elif SSD1963
-	GUI_SetFont(&GUI_FontD60x80);
-
-	GUI_DrawGradientH(15, 300, 785, 450, 0x0000FF, 0x00FFFF);
-
-	/* Create progress bar at location x = 50, y = 325, length = 700, height = 100 */
-	hProgbar = PROGBAR_CreateEx(50, 325, 700, 100, 0, WM_CF_SHOW, 0, GUI_ID_PROGBAR0);
-
-
-	// Create the button
-	hButton = BUTTON_CreateEx(380, 200, 80, 60, 0, WM_CF_SHOW, 0, GUI_ID_BUTTON0);
-
-
-
-	//display ID code for SSD1963 TFT
-	uint16_t regTemp[6];
-
-	GUI_SetFont(&GUI_Font16B_ASCII);
-	GUI_SetColor(GUI_YELLOW);
-
-	LcdWriteReg(0xa1);
-	HAL_SRAM_Read_16b(&hsram1, LCD_CMD, &regTemp, 5);
-	GUI_DispHexAt(regTemp[0], 10, 20, 2);	//0x01
-	GUI_DispHex(regTemp[1], 2);				//0x57
-	GUI_DispHex(regTemp[2], 2);				//0x61
-	GUI_DispHex(regTemp[3], 2);				//0x01
-	GUI_DispHex(regTemp[4], 2);				//0xff
-
-#else //SSD1289
-	GUI_DispStringHCenterAt("ECET260", 160, 50);
-
-	GUI_DrawGradientH(5, 150, 315, 235, 0x0000FF, 0x00FFFF);
-
-	/* Create progress bar at location x = 10, y = 10, length = 219, height = 30 */
-	hProgbar = PROGBAR_CreateEx(50, 180, 219, 30, 0, WM_CF_SHOW, 0, GUI_ID_PROGBAR0);
-
-
-	// Create the button
-	hButton = BUTTON_CreateEx(120, 100, 80, 60, 0, WM_CF_SHOW, 0, GUI_ID_BUTTON0);
-
-
-	//display ID code for TFT
-	uint16_t regTemp[6];
-
-	GUI_SetFont(&GUI_Font16B_ASCII);
-	GUI_SetColor(GUI_YELLOW);
-
-	LcdWriteReg(0x00);
-	HAL_SRAM_Read_16b(&hsram1, LCD_CMD, regTemp, 1);
-	GUI_DispHexAt(regTemp[0], 10, 20, 4);
-
-#endif
-
-
-
-
-	PROGBAR_SetDefaultSkin(PROGBAR_SKIN_FLEX); // Sets the default skin for new widgets
-
-	/* Set progress bar font */
-	PROGBAR_SetFont(hProgbar, &GUI_Font8x16);
-
-	PROGBAR_SetMinMax(hProgbar, 0, 99);
-
-	/* Set progress bar text */
-	PROGBAR_SetText(hProgbar, "...");
-
-
-
-	BUTTON_SetFont(hButton, &GUI_Font8x16);
-	// Set the button text
-	BUTTON_SetText(hButton, "Test");
 
 	GUI_Exec();
 
@@ -252,71 +122,7 @@ int main(void)
   while (1)
   {
 
-	  GUI_PID_GetCurrentState(&pstate);
 
-	  GUI_SetFont(&GUI_Font8x16);
-
-#ifdef ILI9481
-
-		if (pstate.Pressed) {
-			GUI_DispDecAt( pstate.x, 440,20,4);
-			GUI_DispDecAt( pstate.y, 440,40,4);
-			GUI_DispStringAt("-P-", 440,60);
-
-
-
-		}
-		else {
-			GUI_DispDecAt( 0, 440,20,4);
-			GUI_DispDecAt( 0, 440,40,4);
-			GUI_DispStringAt("- -", 440,60);
-		}
-
-#elif SSD1963
-
-		if (pstate.Pressed) {
-			GUI_DispDecAt( pstate.x, 760,20,4);
-			GUI_DispDecAt( pstate.y, 760,40,4);
-			GUI_DispStringAt("-P-", 760,60);
-
-
-
-		}
-		else {
-			GUI_DispDecAt( 0, 760,20,4);
-			GUI_DispDecAt( 0, 760,40,4);
-			GUI_DispStringAt("- -", 760,60);
-		}
-
-#else
-
-
-	 		if (pstate.Pressed) {
-	 			GUI_DispDecAt( pstate.x, 280,20,4);
-	 			GUI_DispDecAt( pstate.y, 280,40,4);
-	 			GUI_DispStringAt("-P-", 280,60);
-
-
-
-	 		}
-	 		else {
-	 			GUI_DispDecAt( 0, 280,20,4);
-	 			GUI_DispDecAt( 0, 280,40,4);
-	 			GUI_DispStringAt("- -", 280,60);
-	 		}
-#endif
-	 		if(BUTTON_IsPressed(hButton))
-	 		{
-	 			count++;
-	 			count%=100;
-	 			sprintf(countString, "%d", count);
-
-	 			PROGBAR_SetValue(hProgbar, count);			//use dec value for bar position
-	 		 	PROGBAR_SetText(hProgbar, countString); 	//use string for text on progress bar
-
-	 		}
-
-	 		GUI_Delay(50);
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
@@ -333,6 +139,7 @@ void SystemClock_Config(void)
 
   RCC_OscInitTypeDef RCC_OscInitStruct;
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
+  RCC_PeriphCLKInitTypeDef PeriphClkInitStruct;
 
     /**Configure the main internal regulator output voltage 
     */
@@ -342,8 +149,9 @@ void SystemClock_Config(void)
 
     /**Initializes the CPU, AHB and APB busses clocks 
     */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE|RCC_OSCILLATORTYPE_LSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 8;
@@ -352,7 +160,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLQ = 7;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
   }
 
     /**Initializes the CPU, AHB and APB busses clocks 
@@ -366,7 +174,14 @@ void SystemClock_Config(void)
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+  PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
   }
 
     /**Configure the Systick interrupt time 
@@ -388,7 +203,63 @@ static void MX_CRC_Init(void)
   hcrc.Instance = CRC;
   if (HAL_CRC_Init(&hcrc) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+}
+
+/* RTC init function */
+static void MX_RTC_Init(void)
+{
+
+  RTC_TimeTypeDef sTime;
+  RTC_DateTypeDef sDate;
+
+    /**Initialize RTC Only 
+    */
+  hrtc.Instance = RTC;
+  hrtc.Init.HourFormat = RTC_HOURFORMAT_12;
+  hrtc.Init.AsynchPrediv = 127;
+  hrtc.Init.SynchPrediv = 255;
+  hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+  hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+  hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+  if (HAL_RTC_Init(&hrtc) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+    /**Initialize RTC and set the Time and Date 
+    */
+  if(HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR0) != 0x32F2){
+  sTime.Hours = 0x10;
+  sTime.Minutes = 0x53;
+  sTime.Seconds = 0x0;
+  sTime.TimeFormat = RTC_HOURFORMAT12_AM;
+  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
+  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  sDate.WeekDay = RTC_WEEKDAY_MONDAY;
+  sDate.Month = RTC_MONTH_OCTOBER;
+  sDate.Date = 0x23;
+  sDate.Year = 0x16;
+
+  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+    HAL_RTCEx_BKUPWrite(&hrtc,RTC_BKP_DR0,0x32F2);
+  }
+    /**Enable the WakeUp 
+    */
+  if (HAL_RTCEx_SetWakeUpTimer(&hrtc, 0, RTC_WAKEUPCLOCK_RTCCLK_DIV16) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
   }
 
 }
@@ -397,6 +268,7 @@ static void MX_CRC_Init(void)
 static void MX_SPI2_Init(void)
 {
 
+  /* SPI2 parameter configuration*/
   hspi2.Instance = SPI2;
   hspi2.Init.Mode = SPI_MODE_MASTER;
   hspi2.Init.Direction = SPI_DIRECTION_2LINES;
@@ -411,7 +283,7 @@ static void MX_SPI2_Init(void)
   hspi2.Init.CRCPolynomial = 10;
   if (HAL_SPI_Init(&hspi2) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
   }
 
 }
@@ -430,7 +302,7 @@ static void MX_USART2_UART_Init(void)
   huart2.Init.OverSampling = UART_OVERSAMPLING_16;
   if (HAL_UART_Init(&huart2) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
   }
 
 }
@@ -533,7 +405,7 @@ static void MX_FSMC_Init(void)
 
   if (HAL_SRAM_Init(&hsram1, &Timing, &ExtTiming) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
   }
 
 }
@@ -547,14 +419,14 @@ static void MX_FSMC_Init(void)
   * @param  None
   * @retval None
   */
-void Error_Handler(void)
+void _Error_Handler(char * file, int line)
 {
-  /* USER CODE BEGIN Error_Handler */
+  /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
   while(1) 
   {
   }
-  /* USER CODE END Error_Handler */ 
+  /* USER CODE END Error_Handler_Debug */ 
 }
 
 #ifdef USE_FULL_ASSERT
