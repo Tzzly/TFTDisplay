@@ -58,7 +58,7 @@ SRAM_HandleTypeDef hsram1;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+uint8_t aTime[50] = {0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -69,6 +69,7 @@ static void MX_CRC_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_RTC_Init(void);
+static void ShowTime(uint8_t* showtime);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -112,6 +113,11 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
 	GUI_Init();
+	GUI_SetBkColor(GUI_BLUE);
+	GUI_Clear();
+
+	GUI_SetFont(&GUI_FontComic24B_1);
+	GUI_SetColor(GUI_BLACK);
 
 	GUI_Exec();
 
@@ -121,8 +127,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
-
+ShowTime(aTime);
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
@@ -232,23 +237,23 @@ static void MX_RTC_Init(void)
     /**Initialize RTC and set the Time and Date 
     */
   if(HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR0) != 0x32F2){
-  sTime.Hours = 0x10;
-  sTime.Minutes = 0x53;
-  sTime.Seconds = 0x0;
+  sTime.Hours = 10;
+  sTime.Minutes = 53;
+  sTime.Seconds = 0;
   sTime.TimeFormat = RTC_HOURFORMAT12_AM;
   sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
   sTime.StoreOperation = RTC_STOREOPERATION_RESET;
-  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
+  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
 
   sDate.WeekDay = RTC_WEEKDAY_MONDAY;
   sDate.Month = RTC_MONTH_OCTOBER;
-  sDate.Date = 0x23;
-  sDate.Year = 0x16;
+  sDate.Date = 23;
+  sDate.Year = 16;
 
-  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
+  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
@@ -411,7 +416,18 @@ static void MX_FSMC_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+static void ShowTime(uint8_t* showtime)
+{
+	RTC_DateTypeDef GetDate;
+	RTC_TimeTypeDef GetTime;
 
+	HAL_RTC_GetTime(&hrtc, &GetTime, FORMAT_BIN);
+	HAL_RTC_GetDate(&hrtc, &GetDate, FORMAT_BIN);
+
+	sprintf((char*)showtime,"%02d:%02d:%02d",GetTime.Hours, GetTime.Minutes, GetTime.Seconds);
+	GUI_GotoXY(0,0);
+	GUI_DispString(showtime);
+}
 /* USER CODE END 4 */
 
 /**

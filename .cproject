@@ -59,10 +59,10 @@
 							<tool id="fr.ac6.managedbuild.tool.gnu.cross.c.linker.852617945" name="MCU GCC Linker" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.linker">
 								<option id="fr.ac6.managedbuild.tool.gnu.cross.c.linker.script.786417196" name="Linker Script (-T)" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.linker.script" useByScannerDiscovery="false" value="../STM32F407VGTx_FLASH.ld" valueType="string"/>
 								<option id="gnu.c.link.option.libs.974556999" name="Libraries (-l)" superClass="gnu.c.link.option.libs" useByScannerDiscovery="false" valueType="libs">
-									<listOptionValue builtIn="false" value="STemWin532_CM4_GCC"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="STemWin532_CM4_GCC"/>
 								</option>
 								<option id="gnu.c.link.option.paths.1954563813" name="Library search path (-L)" superClass="gnu.c.link.option.paths" useByScannerDiscovery="false" valueType="libPaths">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Drivers/STemWin/Lib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Drivers/STemWin/lib}&quot;"/>
 								</option>
 								<option id="gnu.c.link.option.ldflags.1398098219" name="Linker flags" superClass="gnu.c.link.option.ldflags" useByScannerDiscovery="false" value="-specs=nosys.specs " valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.1050382640" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
