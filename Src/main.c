@@ -182,7 +182,7 @@ GUI_SetColor(GUI_YELLOW);
 GUI_DispStringAt("Temp:", 240, 0);
 GUI_GotoXY(280 , 0);
 GUI_DispFloatFix(temp, 4, 1);
-GUI_DispStringAt("DMA version",100,220);
+GUI_DispStringAt("DMA version",0,220);
 HAL_ADC_Stop(&hadc1);
 
 HAL_Delay(250);
