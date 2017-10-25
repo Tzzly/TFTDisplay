@@ -59,6 +59,7 @@ SRAM_HandleTypeDef hsram1;
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 uint8_t aTime[50] = {0};
+uint8_t aDate[50] = {0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -70,6 +71,8 @@ static void MX_SPI2_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_RTC_Init(void);
 static void ShowTime(uint8_t* showtime);
+static void ShowDate(uint8_t* datetime);
+
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -83,6 +86,7 @@ static void ShowTime(uint8_t* showtime);
 int main(void)
 {
 
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -93,7 +97,6 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -117,7 +120,7 @@ int main(void)
 	GUI_Clear();
 
 	GUI_SetFont(&GUI_FontComic24B_1);
-	GUI_SetColor(GUI_BLACK);
+	GUI_SetColor(GUI_CYAN);
 
 	GUI_Exec();
 
@@ -127,7 +130,45 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
+RTC_DateTypeDef sDate;
+RTC_TimeTypeDef sTime;
+
 ShowTime(aTime);
+ShowDate(aDate);
+
+if(sTime.TimeFormat == RTC_HOURFORMAT12_AM){
+	GUI_DispStringAt("AM",0,0);}
+else{
+	GUI_DispStringAt("PM",0,0);}
+
+switch(sDate.WeekDay){
+case 0:
+	GUI_DispStringHCenterAt("MON",160,30);
+	break;
+case 1:
+	GUI_DispStringHCenterAt("TUES",160,30);
+	break;
+case 2:
+	GUI_DispStringHCenterAt("WED",160,30);
+	break;
+case 3:
+	GUI_DispStringHCenterAt("THUR",160,30);
+	break;
+case 4:
+	GUI_DispStringHCenterAt("FRI",160,30);
+	break;
+case 5:
+	GUI_DispStringHCenterAt("SAT",160,30);
+	break;
+case 6:
+	GUI_DispStringHCenterAt("SUN",160,30);
+	break;
+default:
+	GUI_GotoXY(40,100);
+	GUI_DispString("Calendar.exe has stop working");
+}
+
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
@@ -236,10 +277,11 @@ static void MX_RTC_Init(void)
 
     /**Initialize RTC and set the Time and Date 
     */
-  if(HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR0) != 0x32F2){
-  sTime.Hours = 10;
-  sTime.Minutes = 53;
-  sTime.Seconds = 0;
+
+  if(HAL_GPIO_ReadPin(GPIOA, User_Pin) == 1){
+  sTime.Hours = 11;
+  sTime.Minutes = 59;
+  sTime.Seconds = 40;
   sTime.TimeFormat = RTC_HOURFORMAT12_AM;
   sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
   sTime.StoreOperation = RTC_STOREOPERATION_RESET;
@@ -248,10 +290,10 @@ static void MX_RTC_Init(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  sDate.WeekDay = RTC_WEEKDAY_MONDAY;
+  sDate.WeekDay = RTC_WEEKDAY_WEDNESDAY;
   sDate.Month = RTC_MONTH_OCTOBER;
-  sDate.Date = 23;
-  sDate.Year = 16;
+  sDate.Date = 25;
+  sDate.Year = 17;
 
   if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK)
   {
@@ -418,16 +460,23 @@ static void MX_FSMC_Init(void)
 /* USER CODE BEGIN 4 */
 static void ShowTime(uint8_t* showtime)
 {
-	RTC_DateTypeDef GetDate;
-	RTC_TimeTypeDef GetTime;
+	RTC_TimeTypeDef sTime;
 
-	HAL_RTC_GetTime(&hrtc, &GetTime, FORMAT_BIN);
-	HAL_RTC_GetDate(&hrtc, &GetDate, FORMAT_BIN);
+	HAL_RTC_GetTime(&hrtc, &sTime, FORMAT_BIN);
 
-	sprintf((char*)showtime,"%02d:%02d:%02d",GetTime.Hours, GetTime.Minutes, GetTime.Seconds);
-	GUI_GotoXY(0,0);
-	GUI_DispString(showtime);
+	sprintf((char*)showtime,"%02d:%02d:%02d",sTime.Hours, sTime.Minutes, sTime.Seconds);
+	GUI_DispStringHCenterAt(showtime,160,0);
 }
+static void ShowDate(uint8_t* datetime)
+{
+
+	RTC_DateTypeDef sDate;
+
+	HAL_RTC_GetDate(&hrtc, &sDate, FORMAT_BIN);
+	sprintf((char*)datetime, "%2d-%2d-%2d",sDate.Date,sDate.Month ,2000 + sDate.Year);
+	GUI_DispStringHCenterAt(datetime,160,60);
+}
+
 /* USER CODE END 4 */
 
 /**
