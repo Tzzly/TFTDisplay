@@ -43,6 +43,7 @@
 #include "LCD_STM32F4.h"
 #include "GUI.h"
 #include "DIALOG.h"
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -116,11 +117,11 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
 	GUI_Init();
-	GUI_SetBkColor(GUI_BLUE);
+	GUI_SetBkColor(GUI_GREEN);
 	GUI_Clear();
 
 	GUI_SetFont(&GUI_FontComic24B_1);
-	GUI_SetColor(GUI_CYAN);
+	GUI_SetColor(GUI_YELLOW );
 
 	GUI_Exec();
 
@@ -130,45 +131,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
-RTC_DateTypeDef sDate;
-RTC_TimeTypeDef sTime;
-
 ShowTime(aTime);
 ShowDate(aDate);
-
-if(sTime.TimeFormat == RTC_HOURFORMAT12_AM){
-	GUI_DispStringAt("AM",0,0);}
-else{
-	GUI_DispStringAt("PM",0,0);}
-
-switch(sDate.WeekDay){
-case 0:
-	GUI_DispStringHCenterAt("MON",160,30);
-	break;
-case 1:
-	GUI_DispStringHCenterAt("TUES",160,30);
-	break;
-case 2:
-	GUI_DispStringHCenterAt("WED",160,30);
-	break;
-case 3:
-	GUI_DispStringHCenterAt("THUR",160,30);
-	break;
-case 4:
-	GUI_DispStringHCenterAt("FRI",160,30);
-	break;
-case 5:
-	GUI_DispStringHCenterAt("SAT",160,30);
-	break;
-case 6:
-	GUI_DispStringHCenterAt("SUN",160,30);
-	break;
-default:
-	GUI_GotoXY(40,100);
-	GUI_DispString("Calendar.exe has stop working");
-}
-
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
@@ -290,7 +254,7 @@ static void MX_RTC_Init(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  sDate.WeekDay = RTC_WEEKDAY_WEDNESDAY;
+  sDate.WeekDay = RTC_WEEKDAY_SUNDAY;
   sDate.Month = RTC_MONTH_OCTOBER;
   sDate.Date = 25;
   sDate.Year = 17;
@@ -465,6 +429,12 @@ static void ShowTime(uint8_t* showtime)
 	HAL_RTC_GetTime(&hrtc, &sTime, FORMAT_BIN);
 
 	sprintf((char*)showtime,"%02d:%02d:%02d",sTime.Hours, sTime.Minutes, sTime.Seconds);
+	if(sTime.TimeFormat == RTC_HOURFORMAT12_AM){
+		strcat((char*)showtime, "AM");
+	}
+	else{
+		strcat((char*)showtime, "PM");
+	}
 	GUI_DispStringHCenterAt(showtime,160,0);
 }
 static void ShowDate(uint8_t* datetime)
@@ -475,6 +445,33 @@ static void ShowDate(uint8_t* datetime)
 	HAL_RTC_GetDate(&hrtc, &sDate, FORMAT_BIN);
 	sprintf((char*)datetime, "%2d-%2d-%2d",sDate.Date,sDate.Month ,2000 + sDate.Year);
 	GUI_DispStringHCenterAt(datetime,160,60);
+	switch(sDate.WeekDay){
+	case 1:
+		GUI_DispStringHCenterAt("MON",160,30);
+		break;
+	case 2:
+		GUI_DispStringHCenterAt("TUES",160,30);
+		break;
+	case 3:
+		GUI_DispStringHCenterAt("WED",160,30);
+		break;
+	case 4:
+		GUI_DispStringHCenterAt("THUR",160,30);
+		break;
+	case 5:
+		GUI_DispStringHCenterAt("FRI",160,30);
+		break;
+	case 6:
+		GUI_DispStringHCenterAt("SAT",160,30);
+		break;
+	case 7:
+		GUI_DispStringHCenterAt("SUN",160,30);
+		break;
+	default:
+		GUI_GotoXY(40,100);
+		GUI_DispString("Calendar.exe has stop working");
+	}
+
 }
 
 /* USER CODE END 4 */
