@@ -41,6 +41,8 @@
 
 extern volatile GUI_TIMER_TIME OS_TimeMS;
 
+int LEDcount = 500;
+int LEDstate = 0;
 char Prescaler = 100;
 /* USER CODE END 0 */
 
@@ -86,6 +88,19 @@ void SysTick_Handler(void)
 
 		Convert_Pos();
 	}
+	if(LEDcount == 0){
+
+			LEDcount = 500;
+			if(LEDstate == 1){
+				HAL_GPIO_WritePin(OrangeLED_GPIO_Port, OrangeLED_Pin, GPIO_PIN_SET);
+				LEDstate = 0;
+			}
+			else
+			{
+				HAL_GPIO_WritePin(OrangeLED_GPIO_Port, OrangeLED_Pin, GPIO_PIN_RESET);
+				LEDstate = 1;
+			}
+	}
   /* USER CODE END SysTick_IRQn 1 */
 }
 
@@ -125,7 +140,8 @@ void DMA2_Stream0_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
-void HAL_ADC_ConCpltCallback(ADC_HandleTypeDef* hadc3){
+void HAL_ADC_ConCpltCallback(ADC_HandleTypeDef* hadc3)
+{
 	ADC_reading = HAL_ADC_GetValue(&hadc3);
 }
 /* USER CODE END 1 */
