@@ -117,11 +117,11 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
 	GUI_Init();
-	GUI_SetBkColor(GUI_GREEN);
+	GUI_SetBkColor(GUI_BLUE );
 	GUI_Clear();
 
 	GUI_SetFont(&GUI_FontComic24B_1);
-	GUI_SetColor(GUI_YELLOW );
+	GUI_SetColor(GUI_CYAN);
 
 	GUI_Exec();
 
@@ -243,9 +243,9 @@ static void MX_RTC_Init(void)
     */
 
   if(HAL_GPIO_ReadPin(GPIOA, User_Pin) == 1){
-  sTime.Hours = 11;
-  sTime.Minutes = 59;
-  sTime.Seconds = 40;
+  sTime.Hours = 5;
+  sTime.Minutes = 15;
+  sTime.Seconds = 45;
   sTime.TimeFormat = RTC_HOURFORMAT12_AM;
   sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
   sTime.StoreOperation = RTC_STOREOPERATION_RESET;
@@ -254,9 +254,9 @@ static void MX_RTC_Init(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  sDate.WeekDay = RTC_WEEKDAY_SUNDAY;
+  sDate.WeekDay = RTC_WEEKDAY_THURSDAY;
   sDate.Month = RTC_MONTH_OCTOBER;
-  sDate.Date = 25;
+  sDate.Date = 26;
   sDate.Year = 17;
 
   if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK)
@@ -429,7 +429,7 @@ static void ShowTime(uint8_t* showtime)
 	HAL_RTC_GetTime(&hrtc, &sTime, FORMAT_BIN);
 
 	sprintf((char*)showtime,"%02d:%02d:%02d",sTime.Hours, sTime.Minutes, sTime.Seconds);
-	if(sTime.TimeFormat == RTC_HOURFORMAT12_AM){
+	if(sTime.TimeFormat == RTC_HOURFORMAT12_PM){
 		strcat((char*)showtime, "AM");
 	}
 	else{
