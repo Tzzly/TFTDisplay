@@ -88,6 +88,7 @@ int main(void)
 	char ADC_string[10];
 	float ADC_value;
 	float ADC_bar;
+	uint8_t ADCTx[10];
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -143,16 +144,19 @@ int main(void)
 
   /* USER CODE END WHILE */
 
-	  HAL_ADC_Start_IT(&hadc3);
+	  HAL_ADC_Start(&hadc3);
 
 	  HAL_ADC_PollForConversion(&hadc3, 1000);
 	  ADC_value =  HAL_ADC_GetValue(&hadc3);
 	  ADC_bar = HAL_ADC_GetValue(&hadc3);
 
-	  HAL_ADC_Stop_IT(&hadc3);
+	  HAL_ADC_Stop(&hadc3);
 	  HAL_Delay(250);
 
+
 	  ADC_value = ADC_value/4095.0 * 3.0;
+	  ADCTx = ADC_value;
+
 	  GUI_GotoXY(100, 100);
 	  GUI_DispFloatFix(ADC_value, 4, 2);
 	  GUI_DispString("Volt");
@@ -160,6 +164,7 @@ int main(void)
 	  sprintf(ADC_string, "%0.2f", ADC_value);
 	  PROGBAR_SetValue(hProgbar, ADC_bar);
 	  PROGBAR_SetText(hProgbar, ADC_string);
+	  HAL_UART_Transmit(&huart2, &ADCTx,strlen(ADCTx),1000);
 
 	  GUI_Delay(250);
 
