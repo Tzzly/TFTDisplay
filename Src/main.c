@@ -43,6 +43,7 @@
 #include "LCD_STM32F4.h"
 #include "GUI.h"
 #include "DIALOG.h"
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -155,16 +156,16 @@ int main(void)
 
 
 	  ADC_value = ADC_value/4095.0 * 3.0;
-	  ADCTx = ADC_value;
 
 	  GUI_GotoXY(100, 100);
 	  GUI_DispFloatFix(ADC_value, 4, 2);
 	  GUI_DispString("Volt");
-
-	  sprintf(ADC_string, "%0.2f", ADC_value);
+	 // ADCTx = "Hello";
+	  sprintf(ADC_string, "%0.2f\n", ADC_value);
 	  PROGBAR_SetValue(hProgbar, ADC_bar);
 	  PROGBAR_SetText(hProgbar, ADC_string);
-	  HAL_UART_Transmit(&huart2, &ADCTx,strlen(ADCTx),1000);
+
+	  HAL_UART_Transmit(&huart2, ADC_string, strlen(ADC_string), 1000 )
 
 	  GUI_Delay(250);
 
